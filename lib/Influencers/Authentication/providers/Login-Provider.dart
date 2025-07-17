@@ -64,7 +64,7 @@ class AuthProvider with ChangeNotifier {
       UserCredential cred = await _auth.signInWithCredential(credential);
       _user = cred.user;
 
-      if (_user == null) {
+      if (_user != null) {
         await _saveUserSession(_user!.email!, role.name, _user!.displayName);
       }
 

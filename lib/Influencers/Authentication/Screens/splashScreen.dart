@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
 import 'package:creatorcrew/Influencers/Authentication/providers/Login-Provider.dart'
@@ -35,33 +36,46 @@ class _SplashScreenState extends State<SplashScreen> {
     // Check if Firebase has a current user
     User? currentUser = FirebaseAuth.instance.currentUser;
 
-    // Also check shared preferences (as a backup)
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    final userRole = prefs.getString('userRole');
-
     // Short delay for smoother UX
     await Future.delayed(Duration(milliseconds: 1500));
 
-    if (currentUser != null && isLoggedIn && userRole == 'brand') {
-      // Fetch brand info before navigating
-      await brandInfoProvider.fetchBrandInfo();
+    if (currentUser != null) {
+      // User is logged in with Firebase - get their role from Firestore
+      final userDoc =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(currentUser.email)
+              .get();
 
-      // Navigate to brand dashboard
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => BrandHomeNav()));
-    } else {
-      // Navigate to landing page
-      Navigator.of(
-        context,
-      ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
+      if (userDoc.exists) {
+        final userRole = userDoc['role'];
 
-      // Clear any stale session data if there's a mismatch
-      if (isLoggedIn && currentUser == null) {
-        await prefs.clear();
+        // Save to SharedPreferences for backup
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('userRole', userRole);
+
+        if (userRole == 'brand') {
+          // Fetch brand info before navigating
+          await brandInfoProvider.fetchBrandInfo();
+          Navigator.of(
+            context,
+          ).pushReplacement(MaterialPageRoute(builder: (_) => BrandHomeNav()));
+          return;
+        } else if (userRole == 'influencer') {
+          // Navigate to influencer dashboard
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(builder: (_) => page()),
+          // );
+          // return;
+        }
       }
     }
+
+    // If we get here, user is not properly authenticated
+    Navigator.of(
+      context,
+    ).pushReplacement(MaterialPageRoute(builder: (_) => LandingPage()));
   }
 
   @override
