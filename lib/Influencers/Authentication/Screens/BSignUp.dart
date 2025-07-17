@@ -1,5 +1,5 @@
+import 'package:creatorcrew/Influencers/Authentication/Screens/Binfo.dart';
 import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/infoScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -61,9 +61,9 @@ class _BrandSignupWidgetState extends State<BrandSignupWidget> {
           _isLoading = false;
         });
 
-        Navigator.of(
-          context,
-        ).pushReplacement(MaterialPageRoute(builder: (context) => Info()));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => BrandInfoForm()),
+        );
         print(
           "Navigation called",
         ); // This might not execute if navigation fails
