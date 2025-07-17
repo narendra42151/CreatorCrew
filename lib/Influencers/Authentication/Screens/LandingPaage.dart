@@ -75,7 +75,7 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: VaultSyncColors.background,
+      backgroundColor: Color.fromARGB(255, 196, 215, 196),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

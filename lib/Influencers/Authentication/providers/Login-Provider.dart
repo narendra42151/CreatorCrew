@@ -38,12 +38,12 @@ class AuthProvider with ChangeNotifier {
 
       // Check if user exists in Firestore
       DocumentSnapshot doc =
-          await _firestore.collection('users').doc(_user!.uid).get();
+          await _firestore.collection('users').doc(_user!.email).get();
 
       // If this is a new user (first time using Google sign-in)
       if (!doc.exists) {
         // Create a new user entry with the selected role
-        await _firestore.collection('users').doc(_user!.uid).set({
+        await _firestore.collection('users').doc(_user!.email).set({
           'email': _user!.email,
           'role': role.name,
           'name': _user!.displayName ?? 'User',
@@ -83,7 +83,7 @@ class AuthProvider with ChangeNotifier {
       _user = cred.user;
 
       // Save user role and extra info in Firestore
-      await _firestore.collection('users').doc(_user!.uid).set({
+      await _firestore.collection('users').doc(_user!.email).set({
         'email': email,
         'role': role.name,
         'name': name,
@@ -111,7 +111,7 @@ class AuthProvider with ChangeNotifier {
 
       // Check role in Firestore
       DocumentSnapshot doc =
-          await _firestore.collection('users').doc(_user!.uid).get();
+          await _firestore.collection('users').doc(_user!.email).get();
       if (!doc.exists || doc['role'] != role.name) {
         await _auth.signOut();
         return 'Role mismatch or user not found';
