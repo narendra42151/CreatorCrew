@@ -69,17 +69,6 @@ class _InfoState extends State<Info> {
             padding: EdgeInsets.symmetric(horizontal: 24, vertical: 30),
             child: Column(
               children: [
-                // Page indicator dots
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     buildIndicator(_currentPage == 0),
-                //     SizedBox(width: 8),
-                //     buildIndicator(_currentPage == 1),
-                //   ],
-                // ),
-                // SizedBox(height: 20),
-
                 // Continue button
                 SizedBox(
                   width: double.infinity,
