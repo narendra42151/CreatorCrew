@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "762932216843",
+    "project_id": "creatorcrew-3f26a",
+    "storage_bucket": "creatorcrew-3f26a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762932216843:android:072c00ece7c1bbc8ae330e",
+        "android_client_info": {
+          "package_name": "com.example.creatorcrew"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNaxo8r0k5iCYA7qC4S0E-P7mpf00w-rc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
