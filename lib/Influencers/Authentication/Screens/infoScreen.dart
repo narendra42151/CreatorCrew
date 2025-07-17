@@ -1,3 +1,4 @@
+import 'package:creatorcrew/Influencers/Authentication/Screens/BHomeScreen.dart';
 import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class _InfoState extends State<Info> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: VaultSyncColors.background,
+      appBar: AppBar(),
 
       body: Column(
         children: [
@@ -33,23 +35,25 @@ class _InfoState extends State<Info> {
               },
               children: [
                 // First onboarding screen
-                OnboardingPage(
-                  image: 'assets/i1',
-                  title: 'Connect. Collaborate. Create.',
-                  description:
-                      'Build real relationships between influencers and brands — simplified, secure, and seamless.',
-                  showArrow: true,
-                  onArrowTap: () {
-                    _pageController.nextPage(
-                      duration: Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
+                SingleChildScrollView(
+                  child: OnboardingPage(
+                    image: 'assets/i1.jpg',
+                    title: 'Connect. Collaborate. Create.',
+                    description:
+                        'Build real relationships between influencers and brands — simplified, secure, and seamless.',
+                    showArrow: true,
+                    onArrowTap: () {
+                      _pageController.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                  ),
                 ),
 
                 // Second onboarding screen
                 OnboardingPage(
-                  image: 'assets/i2',
+                  image: 'assets/i2.jpg',
                   title: 'Everything You Need — In One Place.',
                   description:
                       'From pitches to partnerships, manage your collaborations smoothly right inside the app.',
@@ -66,15 +70,15 @@ class _InfoState extends State<Info> {
             child: Column(
               children: [
                 // Page indicator dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    buildIndicator(_currentPage == 0),
-                    SizedBox(width: 8),
-                    buildIndicator(_currentPage == 1),
-                  ],
-                ),
-                SizedBox(height: 30),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     buildIndicator(_currentPage == 0),
+                //     SizedBox(width: 8),
+                //     buildIndicator(_currentPage == 1),
+                //   ],
+                // ),
+                // SizedBox(height: 20),
 
                 // Continue button
                 SizedBox(
@@ -88,7 +92,12 @@ class _InfoState extends State<Info> {
                         );
                       } else {
                         // Navigate to main app when finished with onboarding
-                        Navigator.pushReplacementNamed(context, '/home');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BHOmeScreen(),
+                          ),
+                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(

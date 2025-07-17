@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:creatorcrew/Influencers/Authentication/Models/BrandModel.dart';
+import 'package:creatorcrew/Influencers/Authentication/Screens/infoScreen.dart';
 import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -212,7 +213,10 @@ class _BrandInfoFormState extends State<BrandInfoForm> {
         );
 
         // Navigate to dashboard
-        Navigator.pushReplacementNamed(context, '/dashboard');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Info()),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -230,7 +234,18 @@ class _BrandInfoFormState extends State<BrandInfoForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Complete Your Brand Profile'),
-        backgroundColor: VaultSyncColors.buttonGreen,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF4CAF50), // A vibrant green
+                Color(0xFF2E7D32), // Deeper green for depth
+              ],
+            ),
+          ),
+        ),
       ),
       body:
           brandInfoProvider.isLoading
