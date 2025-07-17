@@ -1,4 +1,5 @@
 import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Influencers/Dashboard/provider/campaignProvider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => CloudinaryProvider()),
         ChangeNotifierProvider(create: (_) => BrandInfoProvider()),
+        ChangeNotifierProvider(create: (_) => CampaignProvider()),
       ],
       child: MaterialApp(
         title: 'CreatorCrew',

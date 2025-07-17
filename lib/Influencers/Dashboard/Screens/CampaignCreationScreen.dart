@@ -1,6 +1,8 @@
+import 'package:creatorcrew/Influencers/Dashboard/provider/campaignProvider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CampaignCreationScreen extends StatefulWidget {
   @override
@@ -151,24 +153,94 @@ class _CampaignCreationScreenState extends State<CampaignCreationScreen> {
     );
   }
 
-  void _submitCampaign() {
+  void _submitCampaign() async {
     if (_formKey.currentState!.validate()) {
       // Here you would implement the actual submission
       // This would typically involve sending the data to your backend API
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Campaign published successfully!'),
-          backgroundColor: Colors.green,
-        ),
+      final campaignProvider = Provider.of<CampaignProvider>(
+        context,
+        listen: false,
       );
 
-      // Navigate back to home screen after short delay
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context);
-      });
+      try {
+        // Show loading indicator
+        setState(() {
+          _isLoading = true;
+        });
+        bool success = await campaignProvider.createCampaign(
+          _titleController.text,
+          _descriptionController.text,
+          _selectedCategory!,
+          _selectedPlatforms,
+          _startDate!,
+          _endDate!,
+          _preferredTime,
+          _followerRange.start,
+          _followerRange.end,
+          _locationController.text,
+          _selectedLanguage!,
+          _engagementRateController.text,
+          _imagePost,
+          _video,
+          _story,
+          _reelShort,
+          _budgetPerInfluencerController.text,
+          _totalBudgetController.text,
+          _selectedPaymentMethod!,
+          _attachedFiles,
+        );
+        setState(() {
+          _isLoading = false;
+        });
+        if (success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Campaign published successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          // Navigate back to home screen after short delay
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.pop(context);
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to publish campaign. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
+
+  bool _isLoading = false;
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('Campaign published successfully!'),
+  //         backgroundColor: Colors.green,
+  //       ),
+  //     );
+
+  //     // Navigate back to home screen after short delay
+  //     Future.delayed(Duration(seconds: 2), () {
+  //       Navigator.pop(context);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
