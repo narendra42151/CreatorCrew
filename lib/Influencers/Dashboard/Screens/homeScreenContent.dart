@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
+import 'package:creatorcrew/Influencers/Dashboard/Screens/CampaignCreationScreen.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/ShineEffect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -409,7 +410,14 @@ class BrandHomeContent extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CampaignCreationScreen(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF4CAF50),
                         shape: RoundedRectangleBorder(
