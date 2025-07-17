@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum UserRole { brand, influencer }
 
@@ -12,6 +13,37 @@ class AuthProvider with ChangeNotifier {
 
   User? _user;
   User? get user => _user;
+
+  Future<void> _saveUserSession(
+    String email,
+    String role,
+    String? displayName,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+    await prefs.setString('userEmail', email);
+    await prefs.setString('userRole', role);
+    if (displayName != null) {
+      await prefs.setString('displayName', displayName);
+    }
+  }
+
+  // Clear user session data on logout
+  Future<void> _clearUserSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
+  Future<bool> isUserLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
+  // Get current user role
+  Future<String?> getUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userRole');
+  }
 
   Future<String?> signInWithGoogle(UserRole role) async {
     try {
@@ -33,7 +65,7 @@ class AuthProvider with ChangeNotifier {
       _user = cred.user;
 
       if (_user == null) {
-        return 'Failed to sign in with Google';
+        await _saveUserSession(_user!.email!, role.name, _user!.displayName);
       }
 
       // Check if user exists in Firestore
@@ -81,7 +113,7 @@ class AuthProvider with ChangeNotifier {
         password: password,
       );
       _user = cred.user;
-
+      await _saveUserSession(email, role.name, name);
       // Save user role and extra info in Firestore
       await _firestore.collection('users').doc(_user!.email).set({
         'email': email,
@@ -112,6 +144,8 @@ class AuthProvider with ChangeNotifier {
       // Check role in Firestore
       DocumentSnapshot doc =
           await _firestore.collection('users').doc(_user!.email).get();
+      String? name = doc['name'];
+      await _saveUserSession(email, role.name, name);
       if (!doc.exists || doc['role'] != role.name) {
         await _auth.signOut();
         return 'Role mismatch or user not found';
@@ -135,6 +169,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> signOut() async {
     await _auth.signOut();
+    await _clearUserSession();
     _user = null;
     notifyListeners();
   }
