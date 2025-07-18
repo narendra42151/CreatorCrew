@@ -140,6 +140,9 @@ class CampaignProvider with ChangeNotifier {
   }
 
   // Fetch all campaigns for current brand
+  // ...existing code...
+
+  // Fetch all campaigns for current brand
   Future<List<CampaignModel>> fetchCampaigns() async {
     setLoading(true);
     try {
@@ -149,17 +152,20 @@ class CampaignProvider with ChangeNotifier {
         return [];
       }
 
+      // Modified query - fetch by brandId only and sort in Dart
       final snapshot =
           await _firestore
               .collection('campaigns')
               .where('brandId', isEqualTo: userId)
-              .orderBy('createdAt', descending: true)
               .get();
 
       List<CampaignModel> campaigns =
           snapshot.docs
               .map((doc) => CampaignModel.fromJson(doc.data()))
               .toList();
+
+      // Sort by createdAt in Dart instead of Firestore
+      campaigns.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       setLoading(false);
       return campaigns;
@@ -169,4 +175,6 @@ class CampaignProvider with ChangeNotifier {
       return [];
     }
   }
+
+  // ...existing code...
 }

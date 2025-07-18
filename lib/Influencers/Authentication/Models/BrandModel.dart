@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class BrandModel {
   final String? id;
   final String brandName;
@@ -40,6 +42,7 @@ class BrandModel {
     this.updatedAt,
   });
 
+  // ...existing code...
   factory BrandModel.fromJson(Map<String, dynamic> json) {
     return BrandModel(
       id: json['id'],
@@ -58,9 +61,17 @@ class BrandModel {
         json['marketingPreferences'] ?? {},
       ),
       createdAt:
-          json['createdAt'] != null ? (json['createdAt'] as DateTime) : null,
+          json['createdAt'] != null
+              ? (json['createdAt'] is DateTime
+                  ? json['createdAt']
+                  : (json['createdAt'] as Timestamp).toDate())
+              : null,
       updatedAt:
-          json['updatedAt'] != null ? (json['updatedAt'] as DateTime) : null,
+          json['updatedAt'] != null
+              ? (json['updatedAt'] is DateTime
+                  ? json['updatedAt']
+                  : (json['updatedAt'] as Timestamp).toDate())
+              : null,
     );
   }
 
@@ -79,10 +90,12 @@ class BrandModel {
       'companySize': companySize,
       'socialMedia': socialMedia.toJson(),
       'marketingPreferences': marketingPreferences.toJson(),
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
   }
+
+  // ...existing code...
 }
 
 class LocationModel {

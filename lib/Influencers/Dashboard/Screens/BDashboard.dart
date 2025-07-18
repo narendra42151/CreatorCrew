@@ -1,4 +1,6 @@
 import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
+import 'package:creatorcrew/Influencers/Dashboard/Screens/BrandProfileScreen.dart';
+import 'package:creatorcrew/Influencers/Dashboard/Screens/GlassMorphicAppbar.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/homeScreenContent.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +40,7 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
       ),
 
       // Profile Screen
-      Center(child: Text('Profile Screen', style: TextStyle(fontSize: 24))),
+      BrandProfileScreen(),
     ];
 
     // Load brand info when the screen initializes
