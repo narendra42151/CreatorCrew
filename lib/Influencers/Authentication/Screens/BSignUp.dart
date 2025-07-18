@@ -45,7 +45,7 @@ class _BrandSignupWidgetState extends State<BrandSignupWidget> {
       final error = await authProvider.signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
-        role: UserRole.influencer,
+        role: UserRole.brand,
         name: _nameController.text.trim(),
       );
       print("Auth signup completed, error: $error");

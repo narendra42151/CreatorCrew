@@ -1,15 +1,13 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/CampaignCreationScreen.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/ShineEffect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class GlassmorphicAppBar extends StatelessWidget
-    implements PreferredSizeWidget {
+class GlassmorphicAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool hasUnreadNotifications;
   final Function()? onNotificationTap;
   final Function()? onChatTap;
@@ -27,9 +25,29 @@ class GlassmorphicAppBar extends StatelessWidget
   Size get preferredSize => Size.fromHeight(70.0);
 
   @override
-  Widget build(BuildContext context) {
-    final brandInfoProvider = Provider.of<BrandInfoProvider>(context);
+  _GlassmorphicAppBarState createState() => _GlassmorphicAppBarState();
+}
 
+class _GlassmorphicAppBarState extends State<GlassmorphicAppBar> {
+  String? brandName;
+  String? logoUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBrandData();
+  }
+
+  Future<void> _loadBrandData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      brandName = prefs.getString('brand_name');
+      logoUrl = prefs.getString('brand_logo_url');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -78,9 +96,9 @@ class GlassmorphicAppBar extends StatelessWidget
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child:
-                      brandInfoProvider.brandInfo?.logoUrl != null
+                      logoUrl != null
                           ? Image.network(
-                            brandInfoProvider.brandInfo!.logoUrl!,
+                            logoUrl!,
                             fit: BoxFit.cover,
                             errorBuilder:
                                 (context, error, stackTrace) =>
@@ -94,7 +112,7 @@ class GlassmorphicAppBar extends StatelessWidget
               // Brand Name
               Expanded(
                 child: Text(
-                  brandInfoProvider.brandInfo?.brandName ?? 'Your Brand',
+                  brandName ?? 'Your Brand',
                   style: TextStyle(
                     color: Colors.black87,
                     fontWeight: FontWeight.w600,
@@ -116,9 +134,9 @@ class GlassmorphicAppBar extends StatelessWidget
                     color: Colors.black87,
                     size: 24,
                   ),
-                  onPressed: onNotificationTap,
+                  onPressed: widget.onNotificationTap,
                 ),
-                if (hasUnreadNotifications)
+                if (widget.hasUnreadNotifications)
                   Positioned(
                     top: 12,
                     right: 12,
@@ -142,7 +160,7 @@ class GlassmorphicAppBar extends StatelessWidget
                 color: Colors.black87,
                 size: 22,
               ),
-              onPressed: onChatTap,
+              onPressed: widget.onChatTap,
             ),
 
             // Avatar with Dropdown
@@ -168,9 +186,9 @@ class GlassmorphicAppBar extends StatelessWidget
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(18),
                   child:
-                      brandInfoProvider.brandInfo?.logoUrl != null
+                      logoUrl != null
                           ? Image.network(
-                            brandInfoProvider.brandInfo!.logoUrl!,
+                            logoUrl!,
                             fit: BoxFit.cover,
                             errorBuilder:
                                 (context, error, stackTrace) =>
@@ -212,7 +230,7 @@ class GlassmorphicAppBar extends StatelessWidget
                       value: 'logout',
                     ),
                   ],
-              onSelected: onProfileMenuSelect,
+              onSelected: widget.onProfileMenuSelect,
             ),
             SizedBox(width: 8),
           ],
@@ -223,8 +241,28 @@ class GlassmorphicAppBar extends StatelessWidget
 }
 
 // Example Home Screen Content class that utilizes the GlassmorphicAppBar
-class BrandHomeContent extends StatelessWidget {
+class BrandHomeContent extends StatefulWidget {
   const BrandHomeContent({Key? key}) : super(key: key);
+
+  @override
+  _BrandHomeContentState createState() => _BrandHomeContentState();
+}
+
+class _BrandHomeContentState extends State<BrandHomeContent> {
+  String? brandName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBrandName();
+  }
+
+  Future<void> _loadBrandName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      brandName = prefs.getString('brand_name');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,9 +272,6 @@ class BrandHomeContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Welcome Banner
-          // In the BrandHomeContent class, replace the existing welcome banner with this one
-
           // Welcome Banner with Animation
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -263,46 +298,36 @@ class BrandHomeContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Consumer<BrandInfoProvider>(
-                    builder: (context, brandInfoProvider, child) {
-                      final brandName =
-                          brandInfoProvider.brandInfo?.brandName ??
-                          'Your Brand';
-
-                      return Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Hey $brandName Team 👋",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Hey ${brandName ?? 'Your Brand'} Team 👋",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
                           ),
-                          SizedBox(width: 4),
-                          // Animated Confetti Emoji
-                          TweenAnimationBuilder(
-                            tween: Tween<double>(begin: 0, end: 1),
-                            duration: Duration(seconds: 1),
-                            builder: (context, value, child) {
-                              return Transform.scale(
-                                scale:
-                                    0.8 +
-                                    (value *
-                                        0.4 *
-                                        (1 + 0.1 * (sin(value * 6.28)))),
-                                child: child,
-                              );
-                            },
-                            child: Text("🎉", style: TextStyle(fontSize: 20)),
-                          ),
-                        ],
-                      );
-                    },
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      // Animated Confetti Emoji
+                      TweenAnimationBuilder(
+                        tween: Tween<double>(begin: 0, end: 1),
+                        duration: Duration(seconds: 1),
+                        builder: (context, value, child) {
+                          return Transform.scale(
+                            scale:
+                                0.8 +
+                                (value * 0.4 * (1 + 0.1 * (sin(value * 6.28)))),
+                            child: child,
+                          );
+                        },
+                        child: Text("🎉", style: TextStyle(fontSize: 20)),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 8),
 
