@@ -20,6 +20,90 @@ class CampaignProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // ...existing code...
+
+  // Fetch all active campaigns for influencers
+  // Replace the existing fetchAllActiveCampaigns method with this:
+
+  // Fetch all active campaigns for influencers
+  Future<List<CampaignModel>> fetchAllActiveCampaigns() async {
+    setLoading(true);
+    try {
+      // Remove the orderBy to avoid index issues
+      final snapshot =
+          await _firestore
+              .collection('campaigns')
+              .where('status', isEqualTo: 'active')
+              .get();
+
+      List<CampaignModel> campaigns =
+          snapshot.docs
+              .map((doc) {
+                try {
+                  return CampaignModel.fromJson(
+                    doc.data() as Map<String, dynamic>,
+                  );
+                } catch (e) {
+                  print('Error parsing campaign ${doc.id}: $e');
+                  return null;
+                }
+              })
+              .where((campaign) => campaign != null)
+              .cast<CampaignModel>()
+              .toList();
+
+      // Sort by createdAt in Dart instead of Firestore
+      campaigns.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      print('Fetched ${campaigns.length} active campaigns');
+      setLoading(false);
+      return campaigns;
+    } catch (e) {
+      print('Error fetching active campaigns: $e');
+      setLoading(false);
+      return [];
+    }
+  }
+
+  // Alternative method to fetch ALL campaigns (for debugging)
+  Future<List<CampaignModel>> fetchAllCampaignsForDebugging() async {
+    setLoading(true);
+    try {
+      final snapshot = await _firestore.collection('campaigns').get();
+
+      List<CampaignModel> campaigns =
+          snapshot.docs
+              .map((doc) {
+                try {
+                  print('Campaign ${doc.id}: ${doc.data()}');
+                  return CampaignModel.fromJson(
+                    doc.data() as Map<String, dynamic>,
+                  );
+                } catch (e) {
+                  print('Error parsing campaign ${doc.id}: $e');
+                  return null;
+                }
+              })
+              .where((campaign) => campaign != null)
+              .cast<CampaignModel>()
+              .toList();
+
+      print('Total campaigns in database: ${campaigns.length}');
+      campaigns.forEach((campaign) {
+        print('Campaign: ${campaign.title}, Status: ${campaign.status}');
+      });
+
+      setLoading(false);
+      return campaigns;
+    } catch (e) {
+      print('Error fetching all campaigns: $e');
+      setLoading(false);
+      return [];
+    }
+  }
+
+  // ...existing code...
+
   // Upload a campaign attachment to Cloudinary
   Future<String?> uploadAttachment(PlatformFile file) async {
     try {

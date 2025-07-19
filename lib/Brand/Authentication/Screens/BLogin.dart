@@ -44,15 +44,19 @@ class _BrandLoginWidgetState extends State<BrandLoginWidget> {
         role: UserRole.brand,
       );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => BrandHomeNav()),
-      );
+      setState(() {
+        _isLoading = false;
+      });
 
-      if (error != null) {
+      // Only navigate if login was successful (no error)
+      if (error == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BrandHomeNav()),
+        );
+      } else {
         setState(() {
           _errorMessage = error;
-          _isLoading = false;
         });
       }
     } catch (e) {
@@ -73,10 +77,19 @@ class _BrandLoginWidgetState extends State<BrandLoginWidget> {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final error = await authProvider.signInWithGoogle(UserRole.brand);
 
-      if (error != null) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Only navigate if Google sign-in was successful
+      if (error == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BrandHomeNav()),
+        );
+      } else {
         setState(() {
           _errorMessage = error;
-          _isLoading = false;
         });
       }
     } catch (e) {

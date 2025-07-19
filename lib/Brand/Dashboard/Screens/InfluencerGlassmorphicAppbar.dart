@@ -515,6 +515,7 @@ class InfluencerGlassmorphicAppBar extends StatefulWidget
   final Function()? onNotificationTap;
   final Function()? onChatTap;
   final Function(String)? onProfileMenuSelect;
+  final Function()? onbookmarkTap;
 
   const InfluencerGlassmorphicAppBar({
     Key? key,
@@ -523,6 +524,7 @@ class InfluencerGlassmorphicAppBar extends StatefulWidget
     this.onNotificationTap,
     this.onChatTap,
     this.onProfileMenuSelect,
+    this.onbookmarkTap,
   }) : super(key: key);
 
   @override
@@ -588,34 +590,34 @@ class _InfluencerGlassmorphicAppBarState
               return Row(
                 children: [
                   // Profile Avatar
-                  Container(
-                    height: 40,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child:
-                          provider.profileImageUrl != null || profileUrl != null
-                              ? Image.network(
-                                provider.profileImageUrl ?? profileUrl!,
-                                fit: BoxFit.cover,
-                                errorBuilder:
-                                    (context, error, stackTrace) =>
-                                        Icon(Icons.person, color: Colors.grey),
-                              )
-                              : Icon(Icons.person, color: Colors.grey),
-                    ),
-                  ),
+                  // Container(
+                  //   height: 40,
+                  //   width: 40,
+                  //   decoration: BoxDecoration(
+                  //     shape: BoxShape.circle,
+                  //     color: Colors.white,
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //         color: Colors.black.withOpacity(0.1),
+                  //         blurRadius: 8,
+                  //         offset: Offset(0, 2),
+                  //       ),
+                  //     ],
+                  //   ),
+                  //   child: ClipRRect(
+                  //     borderRadius: BorderRadius.circular(20),
+                  //     child:
+                  //         provider.profileImageUrl != null || profileUrl != null
+                  //             ? Image.network(
+                  //               provider.profileImageUrl ?? profileUrl!,
+                  //               fit: BoxFit.cover,
+                  //               errorBuilder:
+                  //                   (context, error, stackTrace) =>
+                  //                       Icon(Icons.person, color: Colors.grey),
+                  //             )
+                  //             : Icon(Icons.person, color: Colors.grey),
+                  //   ),
+                  // ),
                   SizedBox(width: 10),
 
                   // Welcome Text and Name
@@ -663,6 +665,7 @@ class _InfluencerGlassmorphicAppBarState
                   ),
                   onPressed: widget.onNotificationTap,
                 ),
+
                 if (widget.hasUnreadNotifications)
                   Positioned(
                     top: 12,
@@ -688,6 +691,14 @@ class _InfluencerGlassmorphicAppBarState
                 size: 22,
               ),
               onPressed: widget.onChatTap,
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.bookmark_outline,
+                color: Colors.black87,
+                size: 24,
+              ),
+              onPressed: widget.onbookmarkTap,
             ),
 
             // Avatar with Dropdown

@@ -1,5 +1,6 @@
 import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Influencersdashboar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,10 +43,19 @@ class _InfluencerLoginWidgetState extends State<InfluencerLoginWidget> {
         role: UserRole.influencer,
       );
 
-      if (error != null) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Only navigate if login was successful (no error)
+      if (error == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InfluencerDashboard()),
+        );
+      } else {
         setState(() {
           _errorMessage = error;
-          _isLoading = false;
         });
       }
     } catch (e) {
@@ -66,10 +76,19 @@ class _InfluencerLoginWidgetState extends State<InfluencerLoginWidget> {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final error = await authProvider.signInWithGoogle(UserRole.influencer);
 
-      if (error != null) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Only navigate if Google sign-in was successful
+      if (error == null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => InfluencerDashboard()),
+        );
+      } else {
         setState(() {
           _errorMessage = error;
-          _isLoading = false;
         });
       }
     } catch (e) {

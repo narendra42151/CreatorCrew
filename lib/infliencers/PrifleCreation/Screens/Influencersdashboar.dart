@@ -1,4 +1,10 @@
+import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/InfluencerGlassmorphicAppbar.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/AplicationScreen.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/HOmeScreenInfluencers.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Infleuncercampaion.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/IprofileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,30 +19,33 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    Center(
-      child: Text(
-        'Home Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Campaigns Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    // Center(
+    //   child: Text(
+    //     'Home Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerHomeScreen(),
+    // Center(
+    //   child: Text(
+    //     'Campaigns Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerCampaignsScreen(),
     Center(
       child: Text(
         'Meetings Page',
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     ),
-    Center(
-      child: Text(
-        'Profile Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    // Center(
+    //   child: Text(
+    //     'Profile Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerProfileScreen(),
 
     // InfluencerHome(),
     // InfluencerCampaigns(),
@@ -69,6 +78,14 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
       extendBodyBehindAppBar: true,
       appBar: InfluencerGlassmorphicAppBar(
         currentPageTitle: _pageTitles[_currentIndex],
+        onbookmarkTap: () {
+          // Navigate to applications screen instead of bookmarks
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyApplicationsScreen()),
+          );
+        },
+
         onNotificationTap: () {
           // Handle notification tap
           print('Notifications tapped');
@@ -174,32 +191,24 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
     );
   }
 
-  void _handleLogout() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text('Logout'),
-            content: Text('Are you sure you want to logout?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle logout logic here
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/landing',
-                    (route) => false,
-                  );
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: Text('Logout', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-    );
+  void _handleLogout() async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.signOut();
+
+      // Navigate to landing page and clear all previous routes
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LandingPage()),
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error logging out: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
