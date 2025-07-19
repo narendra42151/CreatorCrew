@@ -138,11 +138,11 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
             items: [
               BottomNavigationBarItem(
                 icon: _buildNavIcon(Icons.home_outlined, Icons.home, 0),
-                label: '🏠 Home',
+                //   label: '🏠 Home',
               ),
               BottomNavigationBarItem(
                 icon: _buildNavIcon(Icons.campaign_outlined, Icons.campaign, 1),
-                label: '📋 Campaigns',
+                //     label: '📋 Campaigns',
               ),
               BottomNavigationBarItem(
                 icon: _buildNavIcon(
@@ -150,11 +150,11 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
                   Icons.calendar_today,
                   2,
                 ),
-                label: '📅 Meetings',
+                //  label: '📅 Meetings',
               ),
               BottomNavigationBarItem(
                 icon: _buildNavIcon(Icons.person_outline, Icons.person, 3),
-                label: '👤 Profile',
+                //  label: '👤 Profile',
               ),
             ],
           ),
