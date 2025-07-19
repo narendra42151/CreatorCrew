@@ -160,12 +160,44 @@ class AuthProvider with ChangeNotifier {
       }
       if (role == UserRole.brand) {
         await _fetchAndSaveBrandInfo();
+      } else if (role == UserRole.influencer) {
+        await _fetchAndSaveInfluencerInfo();
       }
 
       notifyListeners();
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
+    }
+  }
+
+  Future<void> _fetchAndSaveInfluencerInfo() async {
+    try {
+      final userId = _user?.uid;
+      if (userId == null) return;
+
+      final doc = await _firestore.collection('influencers').doc(userId).get();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        final prefs = await SharedPreferences.getInstance();
+
+        // Save influencer name, username and profile URL to SharedPreferences
+        if (data['fullName'] != null) {
+          await prefs.setString('influencer_name', data['fullName']);
+        }
+        if (data['username'] != null) {
+          await prefs.setString('influencer_username', data['username']);
+        }
+        if (data['profilePictureUrl'] != null) {
+          await prefs.setString(
+            'influencer_profile_url',
+            data['profilePictureUrl'],
+          );
+        }
+        await prefs.setBool('is_influencer_onboarded', true);
+      }
+    } catch (e) {
+      print('Error fetching influencer info during sign-in: $e');
     }
   }
 

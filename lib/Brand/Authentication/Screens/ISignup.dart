@@ -1,6 +1,6 @@
 import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
-import 'package:creatorcrew/Brand/Authentication/Screens/infoScreen.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/InfluencresOnBordingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -60,9 +60,15 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
           _isLoading = false;
         });
 
-        Navigator.of(
-          context,
-        ).pushReplacement(MaterialPageRoute(builder: (context) => Info()));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder:
+                (context) => InfluencerOnboardingScreen(
+                  initialEmail: _emailController.text.trim(),
+                  initialName: _nameController.text.trim(),
+                ),
+          ),
+        );
         print(
           "Navigation called",
         ); // This might not execute if navigation fails
