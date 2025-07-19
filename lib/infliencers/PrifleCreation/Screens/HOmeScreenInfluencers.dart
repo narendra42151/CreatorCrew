@@ -12,6 +12,7 @@ class InfluencerHomeScreen extends StatefulWidget {
 class _InfluencerHomeScreenState extends State<InfluencerHomeScreen> {
   String? influencerName;
   List<CampaignModel> hotCampaigns = [];
+  String? influencerCategory;
   bool isLoading = true;
 
   @override
@@ -20,6 +21,21 @@ class _InfluencerHomeScreenState extends State<InfluencerHomeScreen> {
     _loadData();
   }
 
+  // Future<void> _loadData() async {
+  //   final data = await InfluencerSessionManager.getInfluencerData();
+  //   final campaignProvider = Provider.of<CampaignProvider>(
+  //     context,
+  //     listen: false,
+  //   );
+
+  //   final campaigns = await campaignProvider.fetchCampaigns();
+
+  //   setState(() {
+  //     influencerName = data['name']?.split(' ')[0] ?? 'Creator';
+  //     hotCampaigns = campaigns.take(5).toList(); // Show first 5 campaigns
+  //     isLoading = false;
+  //   });
+  // }
   Future<void> _loadData() async {
     final data = await InfluencerSessionManager.getInfluencerData();
     final campaignProvider = Provider.of<CampaignProvider>(
@@ -27,11 +43,54 @@ class _InfluencerHomeScreenState extends State<InfluencerHomeScreen> {
       listen: false,
     );
 
-    final campaigns = await campaignProvider.fetchCampaigns();
+    // Fetch all active campaigns instead of brand campaigns
+    final allCampaigns = await campaignProvider.fetchAllActiveCampaigns();
+
+    // Get influencer's category/niche
+    final influencerNiche = data['category'] ?? data['niche'] ?? '';
+
+    // Filter campaigns based on matching categories
+    List<CampaignModel> filteredCampaigns = [];
+
+    if (influencerNiche.isNotEmpty) {
+      filteredCampaigns =
+          allCampaigns.where((campaign) {
+            // Case-insensitive category matching
+            return campaign.category.toLowerCase() ==
+                    influencerNiche.toLowerCase() ||
+                campaign.category.toLowerCase().contains(
+                  influencerNiche.toLowerCase(),
+                ) ||
+                influencerNiche.toLowerCase().contains(
+                  campaign.category.toLowerCase(),
+                );
+          }).toList();
+      if (filteredCampaigns.isEmpty) {
+        filteredCampaigns =
+            allCampaigns.where((campaign) {
+              final generalCategories = [
+                'general',
+                'lifestyle',
+                'brand awareness',
+                'all categories',
+              ];
+              return generalCategories.any(
+                (general) => campaign.category.toLowerCase().contains(
+                  general.toLowerCase(),
+                ),
+              );
+            }).toList();
+      }
+    } else {
+      // If no category specified, show all campaigns
+      filteredCampaigns = allCampaigns;
+    }
 
     setState(() {
       influencerName = data['name']?.split(' ')[0] ?? 'Creator';
-      hotCampaigns = campaigns.take(5).toList(); // Show first 5 campaigns
+      influencerCategory = influencerNiche;
+      hotCampaigns =
+          filteredCampaigns.take(5).toList(); // Show first 5 filtered campaigns
       isLoading = false;
     });
   }
@@ -248,6 +307,51 @@ class _InfluencerHomeScreenState extends State<InfluencerHomeScreen> {
     );
   }
 
+  // Widget _buildHotCampaignsSection() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         children: [
+  //           Text('🔥', style: TextStyle(fontSize: 20)),
+  //           SizedBox(width: 8),
+  //           Text(
+  //             'Hot Campaigns for You',
+  //             style: TextStyle(
+  //               fontSize: 18,
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.black87,
+  //             ),
+  //           ),
+  //           Spacer(),
+  //           TextButton(
+  //             onPressed: () {
+  //               // Navigate to campaigns page
+  //             },
+  //             child: Text('View All'),
+  //           ),
+  //         ],
+  //       ),
+  //       SizedBox(height: 16),
+  //       if (isLoading)
+  //         Center(child: CircularProgressIndicator())
+  //       else if (hotCampaigns.isEmpty)
+  //         _buildNoCampaignsCard()
+  //       else
+  //         Container(
+  //           height: 200,
+  //           child: ListView.builder(
+  //             scrollDirection: Axis.horizontal,
+  //             itemCount: hotCampaigns.length,
+  //             itemBuilder: (context, index) {
+  //               return _buildCampaignCard(hotCampaigns[index]);
+  //             },
+  //           ),
+  //         ),
+  //     ],
+  //   );
+  // }
+
   Widget _buildHotCampaignsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,15 +360,31 @@ class _InfluencerHomeScreenState extends State<InfluencerHomeScreen> {
           children: [
             Text('🔥', style: TextStyle(fontSize: 20)),
             SizedBox(width: 8),
-            Text(
-              'Hot Campaigns for You',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Hot Campaigns for You',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  if (influencerCategory != null &&
+                      influencerCategory!.isNotEmpty)
+                    Text(
+                      'Matched with your ${influencerCategory} category',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[600],
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                ],
               ),
             ),
-            Spacer(),
             TextButton(
               onPressed: () {
                 // Navigate to campaigns page
