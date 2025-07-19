@@ -1,12 +1,17 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/CloudinaryProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Models/InfluencerProfile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InfluencerOnboardingProvider with ChangeNotifier {
   final CloudinaryProvider _cloudinaryProvider = CloudinaryProvider();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Basic Info
   String _fullName = '';
@@ -301,25 +306,82 @@ class InfluencerOnboardingProvider with ChangeNotifier {
     );
   }
 
-  // Save Profile (implement your backend logic here)
+  // Method to save influencer data to SharedPreferences
+  Future<void> _saveInfluencerDataToPrefs(
+    String fullName,
+    String? profileUrl,
+  ) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('influencer_name', fullName);
+    if (profileUrl != null) {
+      await prefs.setString('influencer_profile_url', profileUrl);
+    }
+    await prefs.setBool('is_influencer_onboarded', true);
+  }
+
+  // Check if username is available
+  Future<bool> isUsernameAvailable(String username) async {
+    try {
+      final querySnapshot =
+          await _firestore
+              .collection('influencers')
+              .where('username', isEqualTo: username)
+              .get();
+
+      return querySnapshot.docs.isEmpty;
+    } catch (e) {
+      print('Error checking username availability: $e');
+      return false;
+    }
+  }
+
+  // Save Profile to Firebase
   Future<bool> saveProfile() async {
     _isLoading = true;
+    _errorMessage = null;
     notifyListeners();
 
     try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        _errorMessage = 'User not authenticated';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // Check if username is available
+      if (!await isUsernameAvailable(_username)) {
+        _errorMessage = 'Username is already taken';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
       // Upload profile image if exists
       if (_profileImage != null && _profileImageUrl == null) {
         await uploadProfileImage();
+        if (_profileImageUrl == null) {
+          _errorMessage = 'Failed to upload profile image';
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
       }
 
       final profile = createProfile();
 
-      // TODO: Implement your backend API call here
-      // Example:
-      // final response = await apiService.createInfluencerProfile(profile);
+      // Save to Firestore
+      await _firestore
+          .collection('influencers')
+          .doc(userId)
+          .set(profile.toJson());
 
-      // Simulate API call
-      await Future.delayed(Duration(seconds: 2));
+      // Save to SharedPreferences
+      await _saveInfluencerDataToPrefs(
+        profile.fullName,
+        profile.profilePictureUrl,
+      );
 
       _isLoading = false;
       notifyListeners();
@@ -330,6 +392,166 @@ class InfluencerOnboardingProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  // Fetch influencer profile from Firebase
+  Future<InfluencerProfile?> fetchProfile() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        _errorMessage = 'User not authenticated';
+        _isLoading = false;
+        notifyListeners();
+        return null;
+      }
+
+      final doc = await _firestore.collection('influencers').doc(userId).get();
+      if (!doc.exists) {
+        _isLoading = false;
+        notifyListeners();
+        return null;
+      }
+
+      final data = doc.data()!;
+      final profile = InfluencerProfile.fromJson(data);
+
+      // Update local state
+      _fullName = profile.fullName;
+      _username = profile.username;
+      _email = profile.email;
+      _phoneNumber = profile.phoneNumber ?? '';
+      _gender = profile.gender;
+      _dateOfBirth = profile.dateOfBirth;
+      _city = profile.city ?? '';
+      _country = profile.country ?? '';
+      _profileImageUrl = profile.profilePictureUrl;
+      _bio = profile.bio ?? '';
+      _selectedCategories = List<String>.from(profile.categories);
+      _selectedLanguages = List<String>.from(profile.languagesSpoken);
+      _socialMediaAccounts = List<SocialMediaAccount>.from(
+        profile.socialMediaAccounts,
+      );
+      _performanceMetrics = profile.performanceMetrics;
+      _professionalInfo = profile.professionalInfo;
+      _additionalInfo = profile.additionalInfo;
+
+      // Save to SharedPreferences
+      await _saveInfluencerDataToPrefs(
+        profile.fullName,
+        profile.profilePictureUrl,
+      );
+
+      _isLoading = false;
+      notifyListeners();
+      return profile;
+    } catch (e) {
+      _errorMessage = 'Error fetching profile: $e';
+      _isLoading = false;
+      notifyListeners();
+      return null;
+    }
+  }
+
+  // Update existing profile
+  Future<bool> updateProfile() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        _errorMessage = 'User not authenticated';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // Check if username is available (excluding current user)
+      final querySnapshot =
+          await _firestore
+              .collection('influencers')
+              .where('username', isEqualTo: _username)
+              .get();
+
+      final isUsernameTaken = querySnapshot.docs.any((doc) => doc.id != userId);
+      if (isUsernameTaken) {
+        _errorMessage = 'Username is already taken';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // Upload profile image if changed
+      if (_profileImage != null && _profileImageUrl == null) {
+        await uploadProfileImage();
+        if (_profileImageUrl == null) {
+          _errorMessage = 'Failed to upload profile image';
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
+      }
+
+      final profile = createProfile();
+
+      // Update in Firestore
+      await _firestore
+          .collection('influencers')
+          .doc(userId)
+          .update(profile.toJson());
+
+      // Update SharedPreferences
+      await _saveInfluencerDataToPrefs(
+        profile.fullName,
+        profile.profilePictureUrl,
+      );
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = 'Failed to update profile: $e';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Check if user has completed onboarding
+  Future<bool> hasCompletedOnboarding() async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) return false;
+
+      final doc = await _firestore.collection('influencers').doc(userId).get();
+      return doc.exists;
+    } catch (e) {
+      print('Error checking onboarding status: $e');
+      return false;
+    }
+  }
+
+  // Initialize provider with user data
+  Future<void> initializeWithUserData() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      _email = user.email ?? '';
+      if (user.displayName != null && user.displayName!.isNotEmpty) {
+        _fullName = user.displayName!;
+      }
+      notifyListeners();
+    }
+  }
+
+  // Clear error message
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
   }
 
   // Reset all data
@@ -354,5 +576,82 @@ class InfluencerOnboardingProvider with ChangeNotifier {
     _isLoading = false;
     _errorMessage = null;
     notifyListeners();
+  }
+
+  // Delete profile (optional)
+  Future<bool> deleteProfile() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        _errorMessage = 'User not authenticated';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+
+      // Delete from Firestore
+      await _firestore.collection('influencers').doc(userId).delete();
+
+      // Clear SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('influencer_name');
+      await prefs.remove('influencer_profile_url');
+      await prefs.setBool('is_influencer_onboarded', false);
+
+      // Reset local state
+      reset();
+
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _errorMessage = 'Failed to delete profile: $e';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Get influencers by category (for brand discovery)
+  Future<List<InfluencerProfile>> getInfluencersByCategory(
+    String category,
+  ) async {
+    try {
+      final querySnapshot =
+          await _firestore
+              .collection('influencers')
+              .where('categories', arrayContains: category)
+              .get();
+
+      return querySnapshot.docs
+          .map((doc) => InfluencerProfile.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      print('Error fetching influencers by category: $e');
+      return [];
+    }
+  }
+
+  // Search influencers by username
+  Future<List<InfluencerProfile>> searchInfluencers(String searchTerm) async {
+    try {
+      final querySnapshot =
+          await _firestore
+              .collection('influencers')
+              .where('username', isGreaterThanOrEqualTo: searchTerm)
+              .where('username', isLessThanOrEqualTo: searchTerm + '\uf8ff')
+              .get();
+
+      return querySnapshot.docs
+          .map((doc) => InfluencerProfile.fromJson(doc.data()))
+          .toList();
+    } catch (e) {
+      print('Error searching influencers: $e');
+      return [];
+    }
   }
 }

@@ -1,5 +1,5 @@
+// filepath: c:\Users\naren\OneDrive\Desktop\CreatorCrew\creatorcrew\lib\infliencers\PrifleCreation\Models\InfluencerProfile.dart
 class InfluencerProfile {
-  final String? id;
   final String fullName;
   final String username;
   final String email;
@@ -16,11 +16,10 @@ class InfluencerProfile {
   final PerformanceMetrics? performanceMetrics;
   final ProfessionalInfo? professionalInfo;
   final AdditionalInfo? additionalInfo;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   InfluencerProfile({
-    this.id,
     required this.fullName,
     required this.username,
     required this.email,
@@ -37,13 +36,14 @@ class InfluencerProfile {
     this.performanceMetrics,
     this.professionalInfo,
     this.additionalInfo,
-    this.createdAt,
-    this.updatedAt,
+    required this.createdAt,
+    required this.updatedAt,
   });
+
+  // ...existing code...
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'fullName': fullName,
       'username': username,
       'email': email,
@@ -61,34 +61,32 @@ class InfluencerProfile {
       'performanceMetrics': performanceMetrics?.toJson(),
       'professionalInfo': professionalInfo?.toJson(),
       'additionalInfo': additionalInfo?.toJson(),
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
   }
 
   factory InfluencerProfile.fromJson(Map<String, dynamic> json) {
     return InfluencerProfile(
-      id: json['id'],
       fullName: json['fullName'] ?? '',
       username: json['username'] ?? '',
       email: json['email'] ?? '',
-      phoneNumber: json['phoneNumber'],
+      phoneNumber: json['phoneNumber'] ?? '',
       gender: json['gender'],
       dateOfBirth:
           json['dateOfBirth'] != null
               ? DateTime.parse(json['dateOfBirth'])
               : null,
-      city: json['city'],
-      country: json['country'],
+      city: json['city'] ?? '',
+      country: json['country'] ?? '',
       profilePictureUrl: json['profilePictureUrl'],
-      bio: json['bio'],
+      bio: json['bio'] ?? '',
       categories: List<String>.from(json['categories'] ?? []),
       languagesSpoken: List<String>.from(json['languagesSpoken'] ?? []),
       socialMediaAccounts:
-          (json['socialMediaAccounts'] as List?)
-              ?.map((e) => SocialMediaAccount.fromJson(e))
-              .toList() ??
-          [],
+          (json['socialMediaAccounts'] as List<dynamic>? ?? [])
+              .map((e) => SocialMediaAccount.fromJson(e))
+              .toList(),
       performanceMetrics:
           json['performanceMetrics'] != null
               ? PerformanceMetrics.fromJson(json['performanceMetrics'])
@@ -101,54 +99,8 @@ class InfluencerProfile {
           json['additionalInfo'] != null
               ? AdditionalInfo.fromJson(json['additionalInfo'])
               : null,
-      createdAt:
-          json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt:
-          json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
-    );
-  }
-
-  InfluencerProfile copyWith({
-    String? id,
-    String? fullName,
-    String? username,
-    String? email,
-    String? phoneNumber,
-    String? gender,
-    DateTime? dateOfBirth,
-    String? city,
-    String? country,
-    String? profilePictureUrl,
-    String? bio,
-    List<String>? categories,
-    List<String>? languagesSpoken,
-    List<SocialMediaAccount>? socialMediaAccounts,
-    PerformanceMetrics? performanceMetrics,
-    ProfessionalInfo? professionalInfo,
-    AdditionalInfo? additionalInfo,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return InfluencerProfile(
-      id: id ?? this.id,
-      fullName: fullName ?? this.fullName,
-      username: username ?? this.username,
-      email: email ?? this.email,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      gender: gender ?? this.gender,
-      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-      city: city ?? this.city,
-      country: country ?? this.country,
-      profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
-      bio: bio ?? this.bio,
-      categories: categories ?? this.categories,
-      languagesSpoken: languagesSpoken ?? this.languagesSpoken,
-      socialMediaAccounts: socialMediaAccounts ?? this.socialMediaAccounts,
-      performanceMetrics: performanceMetrics ?? this.performanceMetrics,
-      professionalInfo: professionalInfo ?? this.professionalInfo,
-      additionalInfo: additionalInfo ?? this.additionalInfo,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
     );
   }
 }
@@ -156,20 +108,20 @@ class InfluencerProfile {
 class SocialMediaAccount {
   final String platform;
   final String username;
-  final int? followerCount;
+  final int followerCount;
   final double? engagementRate;
   final int? avgViews;
   final String? channelLink;
-  final bool isVerified;
+  final String? profileUrl;
 
   SocialMediaAccount({
     required this.platform,
     required this.username,
-    this.followerCount,
+    required this.followerCount,
     this.engagementRate,
     this.avgViews,
     this.channelLink,
-    this.isVerified = false,
+    this.profileUrl,
   });
 
   Map<String, dynamic> toJson() {
@@ -180,7 +132,7 @@ class SocialMediaAccount {
       'engagementRate': engagementRate,
       'avgViews': avgViews,
       'channelLink': channelLink,
-      'isVerified': isVerified,
+      'profileUrl': profileUrl,
     };
   }
 
@@ -188,11 +140,11 @@ class SocialMediaAccount {
     return SocialMediaAccount(
       platform: json['platform'] ?? '',
       username: json['username'] ?? '',
-      followerCount: json['followerCount'],
+      followerCount: json['followerCount'] ?? 0,
       engagementRate: json['engagementRate']?.toDouble(),
       avgViews: json['avgViews'],
       channelLink: json['channelLink'],
-      isVerified: json['isVerified'] ?? false,
+      profileUrl: json['profileUrl'],
     );
   }
 }
@@ -200,14 +152,14 @@ class SocialMediaAccount {
 class PerformanceMetrics {
   final int totalFollowers;
   final double averageEngagementRate;
-  final int? averageViews;
+  final int averageViews;
   final List<String> pastCampaigns;
 
   PerformanceMetrics({
     required this.totalFollowers,
     required this.averageEngagementRate,
-    this.averageViews,
-    this.pastCampaigns = const [],
+    required this.averageViews,
+    required this.pastCampaigns,
   });
 
   Map<String, dynamic> toJson() {
@@ -223,7 +175,7 @@ class PerformanceMetrics {
     return PerformanceMetrics(
       totalFollowers: json['totalFollowers'] ?? 0,
       averageEngagementRate: json['averageEngagementRate']?.toDouble() ?? 0.0,
-      averageViews: json['averageViews'],
+      averageViews: json['averageViews'] ?? 0,
       pastCampaigns: List<String>.from(json['pastCampaigns'] ?? []),
     );
   }
