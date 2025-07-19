@@ -1,4 +1,5 @@
 import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Influencers/Dashboard/Screens/BDashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +42,11 @@ class _BrandLoginWidgetState extends State<BrandLoginWidget> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
         role: UserRole.brand,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => BrandHomeNav()),
       );
 
       if (error != null) {

@@ -1,4 +1,6 @@
+import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
+import 'package:creatorcrew/Influencers/Authentication/providers/Login-Provider.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/BrandProfileScreen.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/GlassMorphicAppbar.dart';
 import 'package:creatorcrew/Influencers/Dashboard/Screens/homeScreenContent.dart';
@@ -68,6 +70,15 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
         onProfileMenuSelect: (value) {
           if (value == 'logout') {
             // Logout action
+            final authProvider = Provider.of<AuthProvider>(
+              context,
+              listen: false,
+            );
+            authProvider.signOut();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LandingPage()),
+            );
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text('Logging out...')));
