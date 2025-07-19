@@ -89,6 +89,14 @@ class AuthProvider with ChangeNotifier {
         await _auth.signOut();
         return 'You\'re registered with a different role. Please use the correct tab.';
       }
+      if (_user != null) {
+        await _saveUserSession(_user!.email!, role.name, _user!.displayName);
+
+        // If it's a brand user, fetch and save brand info to SharedPreferences
+        if (role == UserRole.brand) {
+          await _fetchAndSaveBrandInfo();
+        }
+      }
 
       notifyListeners();
       return null;
@@ -150,11 +158,37 @@ class AuthProvider with ChangeNotifier {
         await _auth.signOut();
         return 'Role mismatch or user not found';
       }
+      if (role == UserRole.brand) {
+        await _fetchAndSaveBrandInfo();
+      }
 
       notifyListeners();
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
+    }
+  }
+
+  Future<void> _fetchAndSaveBrandInfo() async {
+    try {
+      final userId = _user?.uid;
+      if (userId == null) return;
+
+      final doc = await _firestore.collection('brands').doc(userId).get();
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        final prefs = await SharedPreferences.getInstance();
+
+        // Save brand name and logo URL to SharedPreferences
+        if (data['brandName'] != null) {
+          await prefs.setString('brand_name', data['brandName']);
+        }
+        if (data['logoUrl'] != null) {
+          await prefs.setString('brand_logo_url', data['logoUrl']);
+        }
+      }
+    } catch (e) {
+      print('Error fetching brand info during sign-in: $e');
     }
   }
 
