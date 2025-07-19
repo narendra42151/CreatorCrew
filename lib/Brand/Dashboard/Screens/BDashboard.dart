@@ -6,6 +6,7 @@ import 'package:creatorcrew/Brand/Dashboard/Screens/BrandProfileScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/GlassMorphicAppbar.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/hatScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/homeScreenContent.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/meetings/MeetingScreens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,8 +38,8 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
       // Center(child: Text('Chat Screen', style: TextStyle(fontSize: 24))),
 
       // Meetings Screen
-      Center(child: Text('Meetings Screen', style: TextStyle(fontSize: 24))),
-
+      // Center(child: Text('Meetings Screen', style: TextStyle(fontSize: 24))),
+      MeetingsScreen(),
       // Explore Influencers Screen
       Center(
         child: Text('Explore Influencers', style: TextStyle(fontSize: 24)),

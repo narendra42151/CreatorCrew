@@ -1,4 +1,6 @@
+import 'package:creatorcrew/Brand/Dashboard/Screens/meetings/meetingScehdular.dart';
 import 'package:creatorcrew/Brand/Dashboard/provider/MessageProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/meetingProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -361,11 +363,22 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   void _showMeetingScheduler() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => _buildMeetingScheduler(),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => ChangeNotifierProvider(
+              create: (_) => MeetingProvider(),
+              child: MeetingSchedulerScreen(
+                chatRoomId: widget.chatRoom.id,
+                brandId: widget.chatRoom.brandId,
+                influencerId: widget.chatRoom.influencerId,
+                brandName: widget.chatRoom.brandName,
+                influencerName: widget.chatRoom.influencerName,
+                campaignTitle: widget.chatRoom.campaignTitle,
+              ),
+            ),
+      ),
     );
   }
 
