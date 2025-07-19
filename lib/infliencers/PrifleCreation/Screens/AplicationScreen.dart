@@ -615,6 +615,7 @@
 //   }
 // }
 import 'package:creatorcrew/infliencers/PrifleCreation/Models/AplicatiomModel.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/ApDetailScreen.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/AplicationProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -1060,220 +1061,232 @@ class _MyApplicationsScreenState extends State<MyApplicationsScreen>
           offset: Offset(0, 20 * (1 - value)),
           child: Opacity(
             opacity: value,
-            child: Container(
-              margin: EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xFF1E293B).withOpacity(0.04),
-                    blurRadius: 24,
-                    offset: Offset(0, 4),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            ApplicationDetailScreen(application: application),
                   ),
-                ],
-                border: Border.all(color: Color(0xFFE2E8F0), width: 1),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header Row
-                    Row(
-                      children: [
+                );
+              },
+              child: Container(
+                margin: EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF1E293B).withOpacity(0.04),
+                      blurRadius: 24,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                  border: Border.all(color: Color(0xFFE2E8F0), width: 1),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header Row
+                      Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: statusBgColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(statusIcon, size: 16, color: statusColor),
+                                SizedBox(width: 6),
+                                Text(
+                                  statusText,
+                                  style: TextStyle(
+                                    color: statusColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color(0xFFF1F5F9),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              _formatDate(application.appliedAt),
+                              style: TextStyle(
+                                color: Color(0xFF64748B),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+
+                      // Campaign Title
+                      Text(
+                        application.campaignTitle,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1E293B),
+                          height: 1.3,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+
+                      // Message Section
+                      if (application.message != null &&
+                          application.message!.isNotEmpty)
                         Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
+                          width: double.infinity,
+                          padding: EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: statusBgColor,
-                            borderRadius: BorderRadius.circular(20),
+                            color: Color(0xFFF8FAFC),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Color(0xFFE2E8F0),
+                              width: 1,
+                            ),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(statusIcon, size: 16, color: statusColor),
-                              SizedBox(width: 6),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.message_rounded,
+                                    size: 16,
+                                    color: Color(0xFF3B82F6),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Your Message',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                      color: Color(0xFF3B82F6),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 8),
                               Text(
-                                statusText,
+                                application.message!,
                                 style: TextStyle(
-                                  color: statusColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
+                                  color: Color(0xFF475569),
+                                  fontSize: 14,
+                                  height: 1.5,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Spacer(),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF1F5F9),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            _formatDate(application.appliedAt),
-                            style: TextStyle(
-                              color: Color(0xFF64748B),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16),
 
-                    // Campaign Title
-                    Text(
-                      application.campaignTitle,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1E293B),
-                        height: 1.3,
-                      ),
-                    ),
-                    SizedBox(height: 16),
+                      SizedBox(height: 16),
 
-                    // Message Section
-                    if (application.message != null &&
-                        application.message!.isNotEmpty)
+                      // Applicant Info
                       Container(
-                        width: double.infinity,
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Color(0xFFF8FAFC),
+                          color: Color(0xFFFAFAFA),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Color(0xFFE2E8F0),
-                            width: 1,
-                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
                           children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.message_rounded,
-                                  size: 16,
-                                  color: Color(0xFF3B82F6),
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Your Message',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: Color(0xFF3B82F6),
-                                  ),
-                                ),
-                              ],
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Color(0xFF3B82F6),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Icon(
+                                Icons.person_rounded,
+                                color: Colors.white,
+                                size: 20,
+                              ),
                             ),
-                            SizedBox(height: 8),
-                            Text(
-                              application.message!,
-                              style: TextStyle(
-                                color: Color(0xFF475569),
-                                fontSize: 14,
-                                height: 1.5,
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    application.influencerName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                      color: Color(0xFF1E293B),
+                                    ),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Text(
+                                    application.influencerEmail,
+                                    style: TextStyle(
+                                      color: Color(0xFF64748B),
+                                      fontSize: 14,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
 
-                    SizedBox(height: 16),
-
-                    // Applicant Info
-                    Container(
-                      padding: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFAFAFA),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
+                      // Response Date
+                      if (application.respondedAt != null)
+                        Padding(
+                          padding: EdgeInsets.only(top: 16),
+                          child: Container(
+                            padding: EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Color(0xFF3B82F6),
-                              borderRadius: BorderRadius.circular(10),
+                              color: statusBgColor,
+                              borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Icon(
-                              Icons.person_rounded,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            child: Row(
                               children: [
-                                Text(
-                                  application.influencerName,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                    color: Color(0xFF1E293B),
-                                  ),
+                                Icon(
+                                  Icons.schedule_rounded,
+                                  size: 16,
+                                  color: statusColor,
                                 ),
-                                SizedBox(height: 2),
+                                SizedBox(width: 8),
                                 Text(
-                                  application.influencerEmail,
+                                  'Responded on ${_formatDate(application.respondedAt!)}',
                                   style: TextStyle(
-                                    color: Color(0xFF64748B),
-                                    fontSize: 14,
+                                    color: statusColor,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-
-                    // Response Date
-                    if (application.respondedAt != null)
-                      Padding(
-                        padding: EdgeInsets.only(top: 16),
-                        child: Container(
-                          padding: EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: statusBgColor,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.schedule_rounded,
-                                size: 16,
-                                color: statusColor,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Responded on ${_formatDate(application.respondedAt!)}',
-                                style: TextStyle(
-                                  color: statusColor,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
