@@ -1,6 +1,7 @@
 import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/InfluencerGlassmorphicAppbar.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/AplicationScreen.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/HOmeScreenInfluencers.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Infleuncercampaion.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/IprofileScreen.dart';
@@ -77,6 +78,14 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
       extendBodyBehindAppBar: true,
       appBar: InfluencerGlassmorphicAppBar(
         currentPageTitle: _pageTitles[_currentIndex],
+        onbookmarkTap: () {
+          // Navigate to applications screen instead of bookmarks
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => MyApplicationsScreen()),
+          );
+        },
+
         onNotificationTap: () {
           // Handle notification tap
           print('Notifications tapped');

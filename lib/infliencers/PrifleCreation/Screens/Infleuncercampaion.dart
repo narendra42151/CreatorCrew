@@ -1,5 +1,6 @@
 import 'package:creatorcrew/Brand/Dashboard/Models/CampaignModel.dart';
 import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/providers/AplicationProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -971,9 +972,85 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
     );
   }
 
+  // void _applyCampaign(CampaignModel campaign) {
+  //   // Don't pop here if we're showing from a bottom sheet
+  //   // Navigator.pop(context); // Remove this line
+
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext dialogContext) {
+  //       return AlertDialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(20),
+  //         ),
+  //         title: Row(
+  //           children: [
+  //             Icon(Icons.campaign, color: Colors.blue),
+  //             SizedBox(width: 8),
+  //             Expanded(
+  //               child: Text(
+  //                 'Apply for Campaign',
+  //                 style: TextStyle(fontSize: 18),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         content: Text('Do you want to apply for "${campaign.title}"?'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.of(dialogContext).pop(),
+  //             child: Text('Cancel'),
+  //             style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () {
+  //               // Close the dialog first
+  //               Navigator.of(dialogContext).pop();
+
+  //               // If we're in a bottom sheet, close it too
+  //               if (Navigator.canPop(context)) {
+  //                 Navigator.pop(context);
+  //               }
+
+  //               // Show success message using the original context
+  //               ScaffoldMessenger.of(context).showSnackBar(
+  //                 SnackBar(
+  //                   content: Row(
+  //                     children: [
+  //                       Icon(Icons.check_circle, color: Colors.white),
+  //                       SizedBox(width: 8),
+  //                       Expanded(
+  //                         child: Text(
+  //                           'Application submitted for ${campaign.title}',
+  //                           overflow: TextOverflow.ellipsis,
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                   backgroundColor: Colors.green,
+  //                   behavior: SnackBarBehavior.floating,
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                   ),
+  //                 ),
+  //               );
+  //             },
+  //             style: ElevatedButton.styleFrom(
+  //               backgroundColor: Colors.blue,
+  //               foregroundColor: Colors.white,
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(10),
+  //               ),
+  //             ),
+  //             child: Text('Apply'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
   void _applyCampaign(CampaignModel campaign) {
-    // Don't pop here if we're showing from a bottom sheet
-    // Navigator.pop(context); // Remove this line
+    final TextEditingController messageController = TextEditingController();
 
     showDialog(
       context: context,
@@ -994,7 +1071,31 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
               ),
             ],
           ),
-          content: Text('Do you want to apply for "${campaign.title}"?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Campaign: "${campaign.title}"'),
+              SizedBox(height: 16),
+              Text(
+                'Add a message (optional):',
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 8),
+              TextField(
+                controller: messageController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  hintText:
+                      'Tell the brand why you\'re perfect for this campaign...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  contentPadding: EdgeInsets.all(12),
+                ),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
@@ -1002,7 +1103,7 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // Close the dialog first
                 Navigator.of(dialogContext).pop();
 
@@ -1011,28 +1112,68 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
                   Navigator.pop(context);
                 }
 
-                // Show success message using the original context
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(Icons.check_circle, color: Colors.white),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Application submitted for ${campaign.title}',
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    backgroundColor: Colors.green,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
+                // Show loading
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder:
+                      (context) => Center(child: CircularProgressIndicator()),
                 );
+
+                // Submit application
+                final applicationProvider = Provider.of<ApplicationProvider>(
+                  context,
+                  listen: false,
+                );
+
+                final error = await applicationProvider.submitApplication(
+                  campaignId: campaign.id!,
+                  brandId: campaign.brandId,
+                  campaignTitle: campaign.title,
+                  message:
+                      messageController.text.trim().isNotEmpty
+                          ? messageController.text.trim()
+                          : null,
+                );
+
+                // Close loading dialog
+                Navigator.pop(context);
+
+                // Show result
+                if (error == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Row(
+                        children: [
+                          Icon(Icons.check_circle, color: Colors.white),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Application submitted successfully!',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
@@ -1041,7 +1182,7 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text('Apply'),
+              child: Text('Submit Application'),
             ),
           ],
         );
