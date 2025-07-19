@@ -27,7 +27,29 @@ class ApplicationModel {
     this.respondedAt,
   });
 
+  // Update the fromJson method to handle different timestamp formats:
   factory ApplicationModel.fromJson(Map<String, dynamic> json) {
+    DateTime appliedAt;
+    DateTime? respondedAt;
+
+    // Handle appliedAt timestamp
+    if (json['appliedAt'] is Timestamp) {
+      appliedAt = (json['appliedAt'] as Timestamp).toDate();
+    } else if (json['appliedAt'] is String) {
+      appliedAt = DateTime.parse(json['appliedAt']);
+    } else {
+      appliedAt = DateTime.now(); // Fallback
+    }
+
+    // Handle respondedAt timestamp
+    if (json['respondedAt'] != null) {
+      if (json['respondedAt'] is Timestamp) {
+        respondedAt = (json['respondedAt'] as Timestamp).toDate();
+      } else if (json['respondedAt'] is String) {
+        respondedAt = DateTime.parse(json['respondedAt']);
+      }
+    }
+
     return ApplicationModel(
       id: json['id'],
       campaignId: json['campaignId'],
@@ -38,11 +60,8 @@ class ApplicationModel {
       influencerEmail: json['influencerEmail'],
       status: json['status'],
       message: json['message'],
-      appliedAt: (json['appliedAt'] as Timestamp).toDate(),
-      respondedAt:
-          json['respondedAt'] != null
-              ? (json['respondedAt'] as Timestamp).toDate()
-              : null,
+      appliedAt: appliedAt,
+      respondedAt: respondedAt,
     );
   }
 
