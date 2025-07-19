@@ -1,4 +1,6 @@
 import 'package:creatorcrew/Brand/Dashboard/Screens/InfluencerGlassmorphicAppbar.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/HOmeScreenInfluencers.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Infleuncercampaion.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/IprofileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,18 +16,20 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    Center(
-      child: Text(
-        'Home Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Campaigns Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    // Center(
+    //   child: Text(
+    //     'Home Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerHomeScreen(),
+    // Center(
+    //   child: Text(
+    //     'Campaigns Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerCampaignsScreen(),
     Center(
       child: Text(
         'Meetings Page',
