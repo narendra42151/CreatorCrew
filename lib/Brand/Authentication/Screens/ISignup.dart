@@ -1,20 +1,19 @@
-import 'package:creatorcrew/Influencers/Authentication/Screens/Binfo.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/infoScreen.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/Login-Provider.dart';
-
-class BrandSignupWidget extends StatefulWidget {
+class InfluencerSignupWidget extends StatefulWidget {
   final VoidCallback onToggleView;
 
-  const BrandSignupWidget({required this.onToggleView});
+  const InfluencerSignupWidget({required this.onToggleView});
 
   @override
-  _BrandSignupWidgetState createState() => _BrandSignupWidgetState();
+  _InfluencerSignupWidgetState createState() => _InfluencerSignupWidgetState();
 }
 
-class _BrandSignupWidgetState extends State<BrandSignupWidget> {
+class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -45,7 +44,7 @@ class _BrandSignupWidgetState extends State<BrandSignupWidget> {
       final error = await authProvider.signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
-        role: UserRole.brand,
+        role: UserRole.influencer,
         name: _nameController.text.trim(),
       );
       print("Auth signup completed, error: $error");
@@ -61,9 +60,9 @@ class _BrandSignupWidgetState extends State<BrandSignupWidget> {
           _isLoading = false;
         });
 
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => BrandInfoForm()),
-        );
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (context) => Info()));
         print(
           "Navigation called",
         ); // This might not execute if navigation fails
@@ -85,7 +84,7 @@ class _BrandSignupWidgetState extends State<BrandSignupWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Create Brand Account',
+            'Join as an Influencer',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -112,15 +111,12 @@ class _BrandSignupWidgetState extends State<BrandSignupWidget> {
               child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
             ),
           CustomTextField(
-            label: 'Brand Name',
-            hint: 'Enter your brand name',
+            label: 'Full Name',
+            hint: 'Enter your full name',
             controller: _nameController,
-            prefixIcon: Icons.business_outlined,
+            prefixIcon: Icons.person_outline,
             validator:
-                (val) =>
-                    val == null || val.isEmpty
-                        ? 'Brand name is required'
-                        : null,
+                (val) => val == null || val.isEmpty ? 'Name is required' : null,
           ),
           SizedBox(height: 20),
           CustomTextField(

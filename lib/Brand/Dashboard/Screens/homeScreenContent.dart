@@ -977,10 +977,10 @@
 // }
 import 'dart:math';
 
-import 'package:creatorcrew/Influencers/Dashboard/Models/CampaignModel.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Screens/CampaignCreationScreen.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Screens/ShineEffect.dart';
-import 'package:creatorcrew/Influencers/Dashboard/provider/campaignProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/Models/CampaignModel.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/CampaignCreationScreen.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/ShineEffect.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

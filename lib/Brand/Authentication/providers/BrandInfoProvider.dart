@@ -115,8 +115,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:creatorcrew/Influencers/Authentication/Models/BrandModel.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/CloudinaryProvider.dart';
+import 'package:creatorcrew/Brand/Authentication/Models/BrandModel.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/CloudinaryProvider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

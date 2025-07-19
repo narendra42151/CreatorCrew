@@ -1,21 +1,19 @@
-import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/infoScreen.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class InfluencerSignupWidget extends StatefulWidget {
+class InfluencerLoginWidget extends StatefulWidget {
   final VoidCallback onToggleView;
 
-  const InfluencerSignupWidget({required this.onToggleView});
+  const InfluencerLoginWidget({required this.onToggleView});
 
   @override
-  _InfluencerSignupWidgetState createState() => _InfluencerSignupWidgetState();
+  _InfluencerLoginWidgetState createState() => _InfluencerLoginWidgetState();
 }
 
-class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
+class _InfluencerLoginWidgetState extends State<InfluencerLoginWidget> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -23,16 +21,14 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _signup() async {
+  Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
 
-    print("Starting signup process");
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -40,39 +36,73 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      print("Calling auth provider signup");
-      final error = await authProvider.signUp(
+      final error = await authProvider.login(
         email: _emailController.text.trim(),
         password: _passwordController.text,
         role: UserRole.influencer,
-        name: _nameController.text.trim(),
       );
-      print("Auth signup completed, error: $error");
 
       if (error != null) {
         setState(() {
           _errorMessage = error;
           _isLoading = false;
         });
-      } else {
-        print("Signup successful, attempting navigation");
-        setState(() {
-          _isLoading = false;
-        });
-
-        Navigator.of(
-          context,
-        ).pushReplacement(MaterialPageRoute(builder: (context) => Info()));
-        print(
-          "Navigation called",
-        ); // This might not execute if navigation fails
       }
     } catch (e) {
-      print("Error in signup: $e");
       setState(() {
         _errorMessage = e.toString();
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loginWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final error = await authProvider.signInWithGoogle(UserRole.influencer);
+
+      if (error != null) {
+        setState(() {
+          _errorMessage = error;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _forgotPassword() async {
+    if (_emailController.text.isEmpty) {
+      setState(() {
+        _errorMessage = "Please enter your email address first";
+      });
+      return;
+    }
+
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final error = await authProvider.forgotPassword(
+        _emailController.text.trim(),
+      );
+
+      if (error != null) {
+        setState(() => _errorMessage = error);
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Password reset email sent!')));
+      }
+    } catch (e) {
+      setState(() => _errorMessage = e.toString());
     }
   }
 
@@ -84,7 +114,7 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Join as an Influencer',
+            'Welcome Back, Influencer!',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
@@ -94,7 +124,7 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
           ),
           SizedBox(height: 10),
           Text(
-            'Sign up to get started',
+            'Sign in to continue',
             style: TextStyle(fontSize: 14, color: VaultSyncColors.textLight),
             textAlign: TextAlign.center,
           ),
@@ -111,15 +141,6 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
               child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
             ),
           CustomTextField(
-            label: 'Full Name',
-            hint: 'Enter your full name',
-            controller: _nameController,
-            prefixIcon: Icons.person_outline,
-            validator:
-                (val) => val == null || val.isEmpty ? 'Name is required' : null,
-          ),
-          SizedBox(height: 20),
-          CustomTextField(
             label: 'Email',
             hint: 'Enter your email',
             controller: _emailController,
@@ -133,7 +154,7 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
           SizedBox(height: 20),
           CustomTextField(
             label: 'Password',
-            hint: 'Create a password',
+            hint: 'Enter your password',
             controller: _passwordController,
             obscureText: true,
             prefixIcon: Icons.lock_outline,
@@ -143,9 +164,23 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
                         ? 'Password must be at least 6 characters'
                         : null,
           ),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: _forgotPassword,
+              child: Text(
+                'Forgot Password?',
+                style: TextStyle(
+                  color: VaultSyncColors.primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
           ElevatedButton(
-            onPressed: _isLoading ? null : _signup,
+            onPressed: _isLoading ? null : _login,
             child:
                 _isLoading
                     ? SizedBox(
@@ -156,7 +191,7 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
                         color: Colors.white,
                       ),
                     )
-                    : Text('Create Account'),
+                    : Text('Sign In'),
             style: ElevatedButton.styleFrom(
               backgroundColor: VaultSyncColors.buttonGreen,
               foregroundColor: Colors.white,
@@ -169,16 +204,59 @@ class _InfluencerSignupWidgetState extends State<InfluencerSignupWidget> {
           ),
           SizedBox(height: 20),
           Row(
+            children: [
+              Expanded(child: Divider()),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  'OR',
+                  style: TextStyle(
+                    color: VaultSyncColors.textLight,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Expanded(child: Divider()),
+            ],
+          ),
+          SizedBox(height: 20),
+          OutlinedButton.icon(
+            icon: Image.asset(
+              'assets/google_logo.png',
+              height: 24,
+              width: 24,
+              errorBuilder:
+                  (context, error, stackTrace) =>
+                      Icon(Icons.g_mobiledata, color: VaultSyncColors.textDark),
+            ),
+            label: Text(
+              'Sign in with Google',
+              style: TextStyle(
+                color: VaultSyncColors.textDark,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            onPressed: _isLoading ? null : _loginWithGoogle,
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: Colors.grey.shade300),
+              padding: EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Already have an account? ",
+                "Don't have an account? ",
                 style: TextStyle(color: VaultSyncColors.textLight),
               ),
               TextButton(
                 onPressed: widget.onToggleView,
                 child: Text(
-                  'Sign In',
+                  'Sign Up',
                   style: TextStyle(
                     color: VaultSyncColors.primaryColor,
                     fontWeight: FontWeight.bold,

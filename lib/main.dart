@@ -1,8 +1,8 @@
-import 'package:creatorcrew/Influencers/Authentication/Screens/splashScreen.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/CloudinaryProvider.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/Login-Provider.dart';
-import 'package:creatorcrew/Influencers/Dashboard/provider/campaignProvider.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/splashScreen.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/CloudinaryProvider.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

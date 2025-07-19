@@ -1,5 +1,5 @@
-import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Screens/BDashboard.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/BDashboard.dart';
 import 'package:flutter/material.dart';
 
 class Info extends StatefulWidget {

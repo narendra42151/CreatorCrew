@@ -1,4 +1,4 @@
-import 'package:creatorcrew/Influencers/Dashboard/provider/campaignProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

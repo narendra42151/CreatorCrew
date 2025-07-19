@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:creatorcrew/Influencers/Authentication/Models/BrandModel.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/infoScreen.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
+import 'package:creatorcrew/Brand/Authentication/Models/BrandModel.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/infoScreen.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';

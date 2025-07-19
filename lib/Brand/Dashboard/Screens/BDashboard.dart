@@ -1,9 +1,9 @@
-import 'package:creatorcrew/Influencers/Authentication/Screens/LandingPaage.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/BrandInfoProvider.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/Login-Provider.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Screens/BrandProfileScreen.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Screens/GlassMorphicAppbar.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Screens/homeScreenContent.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/BrandProfileScreen.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/GlassMorphicAppbar.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/homeScreenContent.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

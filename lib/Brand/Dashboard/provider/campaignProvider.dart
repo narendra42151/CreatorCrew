@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:creatorcrew/Influencers/Authentication/providers/CloudinaryProvider.dart';
-import 'package:creatorcrew/Influencers/Dashboard/Models/CampaignModel.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/CloudinaryProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/Models/CampaignModel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

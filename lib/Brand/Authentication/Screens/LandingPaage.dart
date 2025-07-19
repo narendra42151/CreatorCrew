@@ -1,7 +1,7 @@
-import 'package:creatorcrew/Influencers/Authentication/Screens/BLogin.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/BSignUp.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/ISignup.dart';
-import 'package:creatorcrew/Influencers/Authentication/Screens/InfluencersSignin.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/BLogin.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/BSignUp.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/ISignup.dart';
+import 'package:creatorcrew/Brand/Authentication/Screens/InfluencersSignin.dart';
 import 'package:flutter/material.dart';
 
 class VaultSyncColors {
