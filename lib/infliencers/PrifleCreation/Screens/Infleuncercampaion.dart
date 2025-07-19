@@ -972,11 +972,12 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
   }
 
   void _applyCampaign(CampaignModel campaign) {
-    Navigator.pop(context);
+    // Don't pop here if we're showing from a bottom sheet
+    // Navigator.pop(context); // Remove this line
 
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -996,13 +997,21 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
           content: Text('Do you want to apply for "${campaign.title}"?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text('Cancel'),
               style: TextButton.styleFrom(foregroundColor: Colors.grey[600]),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                // Close the dialog first
+                Navigator.of(dialogContext).pop();
+
+                // If we're in a bottom sheet, close it too
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+
+                // Show success message using the original context
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Row(
