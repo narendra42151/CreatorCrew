@@ -1,6 +1,7 @@
 import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/BrandAplicationscreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/BrandProfileScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/GlassMorphicAppbar.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/homeScreenContent.dart';
@@ -61,6 +62,12 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text('Notifications')));
+        },
+        onbookmarkoutlinetap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BrandApplicationsScreen()),
+          );
         },
         onChatTap: () {
           setState(() {

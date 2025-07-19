@@ -9,6 +9,7 @@ class GlassmorphicAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function()? onNotificationTap;
   final Function()? onChatTap;
   final Function(String)? onProfileMenuSelect;
+  final Function()? onbookmarkoutlinetap;
 
   const GlassmorphicAppBar({
     Key? key,
@@ -16,6 +17,7 @@ class GlassmorphicAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.onNotificationTap,
     this.onChatTap,
     this.onProfileMenuSelect,
+    this.onbookmarkoutlinetap,
   }) : super(key: key);
 
   @override
@@ -158,6 +160,10 @@ class _GlassmorphicAppBarState extends State<GlassmorphicAppBar> {
                 size: 22,
               ),
               onPressed: widget.onChatTap,
+            ),
+            IconButton(
+              icon: Icon(Icons.bookmark_add, color: Colors.black87, size: 24),
+              onPressed: widget.onbookmarkoutlinetap,
             ),
 
             // Avatar with Dropdown
