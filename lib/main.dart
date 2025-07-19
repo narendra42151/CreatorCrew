@@ -2,6 +2,8 @@ import 'package:creatorcrew/Brand/Authentication/Screens/splashScreen.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/CloudinaryProvider.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/InfluencerDetailProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/MessageProvider.dart';
 import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/AplicationProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/InfluencerOnboardingProvider.dart';
@@ -28,6 +30,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CampaignProvider()),
         ChangeNotifierProvider(create: (_) => InfluencerOnboardingProvider()),
         ChangeNotifierProvider(create: (_) => ApplicationProvider()),
+        ChangeNotifierProvider(create: (_) => InfluencerDetailProvider()),
+        ChangeNotifierProvider(create: (_) => MessageProvider()),
       ],
       child: MaterialApp(
         title: 'CreatorCrew',

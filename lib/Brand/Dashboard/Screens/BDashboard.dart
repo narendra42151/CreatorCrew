@@ -4,6 +4,7 @@ import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/BrandAplicationscreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/BrandProfileScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/GlassMorphicAppbar.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/hatScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/homeScreenContent.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,9 +31,10 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
     _screens = [
       // Home Screen - now using BrandHomeContent
       BrandHomeContent(),
+      ChatScreen(),
 
       // Chat Screen
-      Center(child: Text('Chat Screen', style: TextStyle(fontSize: 24))),
+      // Center(child: Text('Chat Screen', style: TextStyle(fontSize: 24))),
 
       // Meetings Screen
       Center(child: Text('Meetings Screen', style: TextStyle(fontSize: 24))),
