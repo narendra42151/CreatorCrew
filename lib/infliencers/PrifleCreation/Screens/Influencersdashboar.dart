@@ -1,4 +1,5 @@
 import 'package:creatorcrew/Brand/Dashboard/Screens/InfluencerGlassmorphicAppbar.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/IprofileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,12 +32,13 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
       ),
     ),
-    Center(
-      child: Text(
-        'Profile Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    // Center(
+    //   child: Text(
+    //     'Profile Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerProfileScreen(),
 
     // InfluencerHome(),
     // InfluencerCampaigns(),
