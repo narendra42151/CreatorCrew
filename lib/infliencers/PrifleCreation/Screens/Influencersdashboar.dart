@@ -1,3 +1,5 @@
+import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
+import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/InfluencerGlassmorphicAppbar.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/HOmeScreenInfluencers.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Infleuncercampaion.dart';
@@ -180,32 +182,24 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
     );
   }
 
-  void _handleLogout() {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: Text('Logout'),
-            content: Text('Are you sure you want to logout?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle logout logic here
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/landing',
-                    (route) => false,
-                  );
-                },
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: Text('Logout', style: TextStyle(color: Colors.white)),
-              ),
-            ],
-          ),
-    );
+  void _handleLogout() async {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.signOut();
+
+      // Navigate to landing page and clear all previous routes
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LandingPage()),
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error logging out: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
