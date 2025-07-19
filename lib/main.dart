@@ -6,6 +6,7 @@ import 'package:creatorcrew/Brand/Dashboard/provider/InfluencerDetailProvider.da
 import 'package:creatorcrew/Brand/Dashboard/provider/MessageProvider.dart';
 import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/AplicationProvider.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/providers/InfluenceMessageProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/InfluencerOnboardingProvider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ApplicationProvider()),
         ChangeNotifierProvider(create: (_) => InfluencerDetailProvider()),
         ChangeNotifierProvider(create: (_) => MessageProvider()),
+        ChangeNotifierProvider(create: (_) => InfluencerMessageProvider()),
       ],
       child: MaterialApp(
         title: 'CreatorCrew',
