@@ -613,6 +613,102 @@ Please feel free to reach out to reschedule at your convenience.
     return difference >= 0 && difference <= 10;
   }
 
+  // Add these methods to your existing MeetingProvider class:
+
+  // Fetch all meetings for current influencer
+  Future<void> fetchInfluencerMeetings() async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
+
+      print('Fetching meetings for influencer: ${currentUser.uid}');
+
+      final snapshot =
+          await _firestore
+              .collection('meetings')
+              .where('influencerId', isEqualTo: currentUser.uid)
+              .get();
+
+      _meetings =
+          snapshot.docs.map((doc) => Meeting.fromFirestore(doc)).toList();
+
+      // Sort by scheduled date time
+      _meetings.sort(
+        (a, b) => a.scheduledDateTime.compareTo(b.scheduledDateTime),
+      );
+
+      print('Found ${_meetings.length} meetings for influencer');
+
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching influencer meetings: $e');
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Get influencer meetings stream for real-time updates
+  Stream<List<Meeting>> getInfluencerMeetingsStream() {
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) return Stream.value([]);
+
+    return _firestore
+        .collection('meetings')
+        .where('influencerId', isEqualTo: currentUser.uid)
+        .snapshots()
+        .map((snapshot) {
+          final meetings =
+              snapshot.docs.map((doc) => Meeting.fromFirestore(doc)).toList();
+
+          // Sort by scheduled date time
+          meetings.sort(
+            (a, b) => a.scheduledDateTime.compareTo(b.scheduledDateTime),
+          );
+
+          return meetings;
+        });
+  }
+
+  // Check user type and fetch appropriate meetings
+  Future<void> fetchUserMeetings() async {
+    // You can determine user type based on your app logic
+    // For now, I'll assume you have a way to check if user is brand or influencer
+
+    final currentUser = _auth.currentUser;
+    if (currentUser == null) return;
+
+    // Check if user is brand or influencer
+    // This depends on your user data structure
+    final userDoc =
+        await _firestore.collection('users').doc(currentUser.uid).get();
+
+    if (userDoc.exists) {
+      final userData = userDoc.data();
+      final userType =
+          userData?['userType'] ?? 'influencer'; // Default to influencer
+
+      if (userType == 'brand') {
+        await fetchBrandMeetings();
+      } else {
+        await fetchInfluencerMeetings();
+      }
+    } else {
+      // Fallback: try both and see which returns results
+      await fetchInfluencerMeetings();
+      if (_meetings.isEmpty) {
+        await fetchBrandMeetings();
+      }
+    }
+  }
+
   // Schedule a new meeting
   Future<bool> scheduleMeeting({
     required String chatRoomId,
