@@ -1,9 +1,12 @@
 import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/BrandAplicationscreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/BrandProfileScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/GlassMorphicAppbar.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/hatScreen.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/homeScreenContent.dart';
+import 'package:creatorcrew/Brand/Dashboard/Screens/meetings/MeetingScreens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,13 +32,14 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
     _screens = [
       // Home Screen - now using BrandHomeContent
       BrandHomeContent(),
+      ChatScreen(),
 
       // Chat Screen
-      Center(child: Text('Chat Screen', style: TextStyle(fontSize: 24))),
+      // Center(child: Text('Chat Screen', style: TextStyle(fontSize: 24))),
 
       // Meetings Screen
-      Center(child: Text('Meetings Screen', style: TextStyle(fontSize: 24))),
-
+      // Center(child: Text('Meetings Screen', style: TextStyle(fontSize: 24))),
+      MeetingsScreen(),
       // Explore Influencers Screen
       Center(
         child: Text('Explore Influencers', style: TextStyle(fontSize: 24)),
@@ -61,6 +65,12 @@ class _BrandHomeNavState extends State<BrandHomeNav> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text('Notifications')));
+        },
+        onbookmarkoutlinetap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => BrandApplicationsScreen()),
+          );
         },
         onChatTap: () {
           setState(() {

@@ -83,7 +83,7 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
       backgroundColor: Colors.grey[50],
       body: Column(
         children: [
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           // Header Section with reduced height
           Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 16),
@@ -108,14 +108,14 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Campaigns',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
+                          // Text(
+                          //   'Campaigns',
+                          //   style: TextStyle(
+                          //     fontSize: 24,
+                          //     fontWeight: FontWeight.bold,
+                          //     color: Colors.black87,
+                          //   ),
+                          // ),
                           SizedBox(height: 4),
                           Text(
                             '${_filteredCampaigns.length} opportunities available',
@@ -127,33 +127,33 @@ class _InfluencerCampaignsScreenState extends State<InfluencerCampaignsScreen> {
                         ],
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.blue, Colors.purple],
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.campaign, color: Colors.white, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Live',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.symmetric(
+                    //     horizontal: 12,
+                    //     vertical: 8,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     gradient: LinearGradient(
+                    //       colors: [Colors.blue, Colors.purple],
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(20),
+                    //   ),
+                    //   child: Row(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     children: [
+                    //       // Icon(Icons.campaign, color: Colors.white, size: 16),
+                    //       // SizedBox(width: 4),
+                    //       // Text(
+                    //       //   'Live',
+                    //       //   style: TextStyle(
+                    //       //     color: Colors.white,
+                    //       //     fontSize: 12,
+                    //       //     fontWeight: FontWeight.w600,
+                    //       //   ),
+                    //       // ),
+                    //     ],
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 20),

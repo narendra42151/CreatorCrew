@@ -2,9 +2,11 @@ import 'package:creatorcrew/Brand/Authentication/Screens/LandingPaage.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
 import 'package:creatorcrew/Brand/Dashboard/Screens/InfluencerGlassmorphicAppbar.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/AplicationScreen.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Chat/InfluencerChatScreen.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/HOmeScreenInfluencers.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Infleuncercampaion.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/Screens/IprofileScreen.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/Screens/Meetings/InflluencersMeetingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,12 +35,13 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
     //   ),
     // ),
     InfluencerCampaignsScreen(),
-    Center(
-      child: Text(
-        'Meetings Page',
-        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-      ),
-    ),
+    // Center(
+    //   child: Text(
+    //     'Meetings Page',
+    //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    //   ),
+    // ),
+    InfluencerMeetingsScreen(),
     // Center(
     //   child: Text(
     //     'Profile Page',
@@ -92,7 +95,10 @@ class _InfluencerDashboardState extends State<InfluencerDashboard> {
         },
         onChatTap: () {
           // Handle chat tap
-          print('Chat tapped');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => InfluencerChatScreen()),
+          );
         },
         onProfileMenuSelect: (String value) {
           switch (value) {

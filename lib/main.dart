@@ -2,9 +2,14 @@ import 'package:creatorcrew/Brand/Authentication/Screens/splashScreen.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/BrandInfoProvider.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/CloudinaryProvider.dart';
 import 'package:creatorcrew/Brand/Authentication/providers/Login-Provider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/InfluencerDetailProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/MessageProvider.dart';
 import 'package:creatorcrew/Brand/Dashboard/provider/campaignProvider.dart';
+import 'package:creatorcrew/Brand/Dashboard/provider/meetingProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/AplicationProvider.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/providers/InfluenceMessageProvider.dart';
 import 'package:creatorcrew/infliencers/PrifleCreation/providers/InfluencerOnboardingProvider.dart';
+import 'package:creatorcrew/infliencers/PrifleCreation/providers/Stats/InfluencerStatsProvider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +33,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CampaignProvider()),
         ChangeNotifierProvider(create: (_) => InfluencerOnboardingProvider()),
         ChangeNotifierProvider(create: (_) => ApplicationProvider()),
+        ChangeNotifierProvider(create: (_) => InfluencerDetailProvider()),
+        ChangeNotifierProvider(create: (_) => MessageProvider()),
+        ChangeNotifierProvider(create: (_) => InfluencerMessageProvider()),
+
+        ChangeNotifierProvider(create: (_) => MeetingProvider()),
+        ChangeNotifierProvider(create: (_) => InfluencerStatsProvider()),
       ],
       child: MaterialApp(
         title: 'CreatorCrew',
