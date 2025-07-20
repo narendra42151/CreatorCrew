@@ -178,4 +178,61 @@ class ApplicationProvider with ChangeNotifier {
       throw e;
     }
   }
+  // ...existing code...
+
+  // ...existing code...
+
+  // Add these new methods for stats
+  Future<Map<String, int>> getInfluencerStats() async {
+    try {
+      final userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        return {
+          'activeCampaigns': 0,
+          'pendingSubmissions': 0,
+          'completedCampaigns': 0,
+        };
+      }
+
+      final snapshot =
+          await _firestore
+              .collection('applications')
+              .where('influencerId', isEqualTo: userId)
+              .get();
+
+      int activeCampaigns = 0;
+      int pendingSubmissions = 0;
+      int completedCampaigns = 0;
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final status = data['status'] ?? '';
+
+        switch (status) {
+          case 'accepted':
+            activeCampaigns++;
+            break;
+          case 'submitted':
+            pendingSubmissions++;
+            break;
+          case 'completed':
+            completedCampaigns++;
+            break;
+        }
+      }
+
+      return {
+        'activeCampaigns': activeCampaigns,
+        'pendingSubmissions': pendingSubmissions,
+        'completedCampaigns': completedCampaigns,
+      };
+    } catch (e) {
+      print('Error fetching influencer stats: $e');
+      return {
+        'activeCampaigns': 0,
+        'pendingSubmissions': 0,
+        'completedCampaigns': 0,
+      };
+    }
+  }
 }
