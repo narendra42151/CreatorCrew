@@ -39,7 +39,7 @@ class InfluencerSessionManager {
     return prefs.getString(_keyInfluencerProfileUrl);
   }
 
-  // Check if influencer is onboarded
+  // Check
   static Future<bool> isInfluencerOnboarded() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_keyIsOnboarded) ?? false;
