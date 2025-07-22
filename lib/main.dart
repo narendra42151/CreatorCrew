@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => InfluencerDetailProvider()),
         ChangeNotifierProvider(create: (_) => MessageProvider()),
         ChangeNotifierProvider(create: (_) => InfluencerMessageProvider()),
-
         ChangeNotifierProvider(create: (_) => MeetingProvider()),
         ChangeNotifierProvider(create: (_) => InfluencerStatsProvider()),
       ],
